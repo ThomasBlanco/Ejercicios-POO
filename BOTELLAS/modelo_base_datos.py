@@ -1,78 +1,68 @@
 from modelo_botella import Botella
-
+from modelo_botella_vidrio import Botella_vidrio
+from modelo_botella_plastico import Botella_plastico
 
 class BaseDatos:
     def __init__(self):
-        self.botellas = []  # lista que simula la base de datos
+        self.botellas = []
 
-    # ---------- C: CREAR / AGREGAR ----------
     def agregar_botella(self):
         print("\n--- AGREGAR BOTELLA ---")
-        material = input("Material: ")
-        capacidad = int(input("Capacidad (ml): "))
-        forma = input("Forma: ")
-        diseno = input("Diseño: ")
-        tapa = input("Tipo de tapa: ")
-        grabados = input("Grabados (sí/no o descripción): ")
+        tipo = input("Tipo (normal/vidrio/plástico): ").strip().lower()
 
-        nueva_botella = Botella(material, capacidad, forma, diseno, tapa, grabados)
-        self.botellas.append(nueva_botella)
-        print(f"\n Botella agregada correctamente: {nueva_botella.obtener_info()}")
+        if tipo == "vidrio":
+            color = input("Color del vidrio: ") or "Rojo"
+            capacidad = int(input("Capacidad (ml): ") or 850)
+            nueva = Botella_vidrio(capacidad, color)
+        elif tipo == "plástico" or tipo == "plastico":
+            color = input("Color del plástico: ") or "Transparente"
+            capacidad = int(input("Capacidad (ml): ") or 1000)
+            nueva = Botella_plastico(capacidad, color)
+        else:
+            material = input("Material: ")
+            capacidad = int(input("Capacidad (ml): "))
+            forma = input("Forma: ")
+            diseno = input("Diseño: ")
+            tapa = input("Tipo de tapa: ")
+            grabados = input("Grabados (sí/no o descripción): ")
+            nueva = Botella(material, capacidad, forma, diseno, tapa, grabados)
 
-    # ---------- R: LEER / MOSTRAR ----------
+        self.botellas.append(nueva)
+        print(f"\n Botella agregada:\n{nueva.obtener_info()}")
+
     def mostrar_botellas(self):
         print("\n--- LISTA DE BOTELLAS ---")
         if not self.botellas:
-            print("No hay botellas registradas.")
+            print(" No hay botellas registradas.")
         else:
-            for i, botella in enumerate(self.botellas):
-                print(f"\n{i+1}. {botella.obtener_info()}")
+            for i, b in enumerate(self.botellas):
+                print(f"\n[{i+1}] {b.obtener_info()}")
 
-    # ---------- U: ACTUALIZAR ----------
-    def actualizar_botella(self):
-        print("\n--- ACTUALIZAR BOTELLA ---")
+    def acciones_botella(self):
         self.mostrar_botellas()
         if not self.botellas:
             return
-        
         try:
-            indice = int(input("\nIngrese el número de la botella a actualizar: ")) - 1
-            if 0 <= indice < len(self.botellas):
-                botella = self.botellas[indice]
-                print(f"Seleccionada: {botella.obtener_info()}")
+            indice = int(input("\nSeleccione el número de la botella: ")) - 1
+            botella = self.botellas[indice]
+        except (ValueError, IndexError):
+            print(" Índice no válido.")
+            return
 
-                # Permitir actualizar atributos opcionales
-                nuevo_color = input("Nuevo color (enter para no cambiar): ")
-                if nuevo_color:
-                    botella.cambiar_color(nuevo_color)
+        print(f"\n ACCIONES DE LA BOTELLA DE {botella.material.upper()} 🔹")
+        print(botella.contener_liquidos())
+        print(botella.facilitar_el_vertido())
+        print(botella.cierre_hermetico())
+        print(botella.transporte())
+        print(botella.obtener_capacidad())
 
-                nuevo_diseno = input("Nuevo diseño (enter para no cambiar): ")
-                if nuevo_diseno:
-                    botella.diseno = nuevo_diseno
-
-                nueva_tapa = input("Nuevo tipo de tapa (enter para no cambiar): ")
-                if nueva_tapa:
-                    botella.tapa = nueva_tapa
-
-                print(f"\n Botella actualizada correctamente: {botella.obtener_info()}")
-            else:
-                print(" Índice fuera de rango.")
-        except ValueError:
-            print(" Entrada inválida.")
-
-    # ---------- D: ELIMINAR ----------
     def eliminar_botella(self):
-        print("\n--- ELIMINAR BOTELLA ---")
         self.mostrar_botellas()
         if not self.botellas:
             return
-        
         try:
-            indice = int(input("\nIngrese el número de la botella a eliminar: ")) - 1
-            if 0 <= indice < len(self.botellas):
-                eliminada = self.botellas.pop(indice)
-                print(f"\n Botella eliminada correctamente: {eliminada.obtener_info()}")
-            else:
-                print(" Índice fuera de rango.")
-        except ValueError:
-            print(" Entrada inválida.")
+            indice = int(input("\nIngrese el número a eliminar: ")) - 1
+            eliminada = self.botellas.pop(indice)
+            print(f"\n Eliminada: {eliminada.material} ({eliminada.color})")
+        except (ValueError, IndexError):
+            print(" Índice no válido.")
