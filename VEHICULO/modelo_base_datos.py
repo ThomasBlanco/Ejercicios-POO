@@ -10,7 +10,7 @@ class BaseDatosVehiculos:
     # ---------- C (CREAR) ----------
     def agregar_vehiculo(self):
         print("\n--- AGREGAR VEHÍCULO ---")
-        tipo = input("Tipo (vehiculo/carro/microvan/volqueta): ").strip().lower()
+        tipo = input("Tipo de vehiculo (carro/microvan/volqueta): ").strip().lower()
 
         modelo = input("Modelo: ")
         color = input("Color: ")
